@@ -34,6 +34,15 @@ function hasExactAttribute(tag, attributeName, value) {
   ));
 }
 
+function renderedMarkup(html) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(
+      /<(?:script|style|template)\b(?:[^'">]|"[^"]*"|'[^']*')*>[\s\S]*?<\/(?:script|style|template)\s*>/gi,
+      '',
+    );
+}
+
 function anchors(html) {
   return [...html.matchAll(/(<a\b(?:[^'">]|"[^"]*"|'[^']*')*>)([\s\S]*?)<\/a\s*>/gi)];
 }
@@ -64,9 +73,10 @@ test('CrossScope page retains the approved template contract', () => {
 
 test('paper images and the visible Paper control resolve to local paths', () => {
   const html = readFileSync('index.html', 'utf8');
+  const rendered = renderedMarkup(html);
   ['overview.png', 'architecture.png', 'qualitative.png', 'spatial-support.png']
     .forEach((file) => assert.equal(
-      openingTags(html, 'img').some((tag) => hasExactAttribute(
+      openingTags(rendered, 'img').some((tag) => hasExactAttribute(
         tag,
         'src',
         `static/images/${file}`,
@@ -75,7 +85,7 @@ test('paper images and the visible Paper control resolve to local paths', () => 
       `<img src="static/images/${file}"> is missing`,
     ));
   assert.equal(
-    anchors(html).some(([, tag, content]) => (
+    anchors(rendered).some(([, tag, content]) => (
       hasExactAttribute(tag, 'href', 'static/pdfs/CrossScope.pdf')
       && /\bPaper\b/i.test(visibleText(content))
     )),
