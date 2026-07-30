@@ -10,7 +10,7 @@ Build a static academic project page for *CrossScope: A Role-Asymmetric World Mo
 
 - Paper: `C:/Users/LWH/Desktop/ERCP_CoRL/CrossScope.pdf` (anonymous review submission, 16 pages).
 - Reference template: `https://github.com/jinlab-imvr/SurgSLOT`, `website` branch.
-- Template layout: `index.html`, `static/css/{bulma.min.css,bulma-carousel.min.css,bulma-slider.min.css,fontawesome.all.min.css,index.css}`, and `static/js/{bulma-carousel.min.js,bulma-slider.min.js,index.js}`.
+- Template layout: `index.html` uses the external Google Fonts, Bulma 0.9.4, Font Awesome 6.4.0, and Academicons links found in SurgSLOT; its own `static/css/index.css` and `static/js/index.js` are available as reference styling/initialization files.
 
 ## User-facing page design
 
@@ -38,7 +38,7 @@ Follow the reference template's alternating white and light-gray `section conten
 
 ### Visual and interaction rules
 
-- Use the reference template's local Bulma files and CSS classes (`hero`, `section`, `container`, `columns`, `card`, `button is-rounded is-dark`, and `content-section`).
+- Use the reference template's external CSS links and the same Bulma classes (`hero`, `section`, `container`, `columns`, `card`, `button is-rounded is-dark`, and `content-section`).
 - Preserve the reference footer/acknowledgment pattern, crediting SurgSLOT and Nerfies as template influences and retaining the source template's CC BY-SA 4.0 attribution.
 - Do not add a novel navigation bar, animation system, JavaScript framework, external analytics, fabricated videos, author affiliations, code links, or performance claims.
 - Assets come only from the supplied PDF. Rendered figures retain their captions and are stored locally under `static/images/`.
@@ -46,8 +46,8 @@ Follow the reference template's alternating white and light-gray `section conten
 ## File responsibilities
 
 - `index.html`: Strict SurgSLOT-derived static page with CrossScope content.
-- `static/css/`: Required Bulma and reference-template styles; `index.css` holds only CrossScope-safe overrides.
-- `static/js/`: Reference carousel/slider dependencies plus the unchanged carousel initializer.
+- `static/css/index.css`: SurgSLOT-derived styles plus small CrossScope-safe overrides.
+- `static/js/index.js`: The unchanged SurgSLOT carousel initializer (the page remains valid when no carousel is configured).
 - `static/images/`: PDF-rendered overview, architecture, qualitative, and support-diagnostic graphics.
 - `static/pdfs/CrossScope.pdf`: Local downloadable copy of the supplied manuscript.
 - `README.md`: Local preview instructions and attribution.
@@ -60,10 +60,9 @@ Follow the reference template's alternating white and light-gray `section conten
 
 ## Acceptance criteria
 
-- A browser can open `index.html` without a build step or network dependency for CSS/JS/images.
+- A browser can open `index.html` without a build step; the external CSS/font links match the reference SurgSLOT implementation, while paper content and images are local.
 - All visible CrossScope claims, metrics, and captions trace to the supplied PDF.
 - The page visibly follows SurgSLOT's hero, section, cards/tables, links, citation, and footer conventions.
 - No SurgSLOT project name, authors, images, videos, code links, or unrelated claims remain.
 - The local Paper button opens the included PDF.
 - A local HTTP preview has no console errors or missing static-resource responses.
-
