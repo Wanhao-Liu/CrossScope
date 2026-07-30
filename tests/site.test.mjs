@@ -15,6 +15,33 @@ const requiredFiles = [
   'README.md',
 ];
 
+function openingTags(html, elementName) {
+  return html.match(new RegExp(
+    `<${elementName}\\b(?:[^'">]|"[^"]*"|'[^']*')*>`,
+    'gi',
+  )) ?? [];
+}
+
+function hasExactAttribute(tag, attributeName, value) {
+  const attributes = tag
+    .replace(/^<[^\s/>]+/i, '')
+    .replace(/\/?>$/, '');
+  const attributePattern = /([^\s"'=<>`]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+
+  return [...attributes.matchAll(attributePattern)].some((match) => (
+    match[1].toLowerCase() === attributeName
+    && [match[2], match[3], match[4]].includes(value)
+  ));
+}
+
+function anchors(html) {
+  return [...html.matchAll(/(<a\b(?:[^'">]|"[^"]*"|'[^']*')*>)([\s\S]*?)<\/a\s*>/gi)];
+}
+
+function visibleText(html) {
+  return html.replace(/<[^>]*>/g, ' ');
+}
+
 test('CrossScope page has its required local deliverables', () => {
   requiredFiles.forEach((file) => assert.equal(existsSync(file), true, `${file} is missing`));
 });
@@ -38,12 +65,21 @@ test('CrossScope page retains the approved template contract', () => {
 test('paper images and the visible Paper control resolve to local paths', () => {
   const html = readFileSync('index.html', 'utf8');
   ['overview.png', 'architecture.png', 'qualitative.png', 'spatial-support.png']
-    .forEach((file) => assert.match(
-      html,
-      new RegExp(`<img\\b[^>]*\\ssrc="static/images/${file.replace('.', '\\.')}"[^>]*>`, 'i'),
+    .forEach((file) => assert.equal(
+      openingTags(html, 'img').some((tag) => hasExactAttribute(
+        tag,
+        'src',
+        `static/images/${file}`,
+      )),
+      true,
+      `<img src="static/images/${file}"> is missing`,
     ));
-  assert.match(
-    html,
-    /<a\b(?=[^>]*\shref="static\/pdfs\/CrossScope\.pdf")[^>]*>(?:(?!<\/a>)[\s\S])*?\bPaper\b(?:(?!<\/a>)[\s\S])*?<\/a>/i,
+  assert.equal(
+    anchors(html).some(([, tag, content]) => (
+      hasExactAttribute(tag, 'href', 'static/pdfs/CrossScope.pdf')
+      && /\bPaper\b/i.test(visibleText(content))
+    )),
+    true,
+    'visible Paper control with local CrossScope PDF href is missing',
   );
 });
