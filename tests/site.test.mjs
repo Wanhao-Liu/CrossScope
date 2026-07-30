@@ -35,9 +35,15 @@ test('CrossScope page retains the approved template contract', () => {
   assert.doesNotMatch(html, /iSurg unifies/i);
 });
 
-test('paper images and the Paper control resolve to local paths', () => {
+test('paper images and the visible Paper control resolve to local paths', () => {
   const html = readFileSync('index.html', 'utf8');
   ['overview.png', 'architecture.png', 'qualitative.png', 'spatial-support.png']
-    .forEach((file) => assert.match(html, new RegExp(`static/images/${file}`)));
-  assert.match(html, /href="static\/pdfs\/CrossScope\.pdf"/);
+    .forEach((file) => assert.match(
+      html,
+      new RegExp(`<img\\b[^>]*\\ssrc="static/images/${file.replace('.', '\\.')}"[^>]*>`, 'i'),
+    ));
+  assert.match(
+    html,
+    /<a\b(?=[^>]*\shref="static\/pdfs\/CrossScope\.pdf")[^>]*>(?:(?!<\/a>)[\s\S])*?\bPaper\b(?:(?!<\/a>)[\s\S])*?<\/a>/i,
+  );
 });
