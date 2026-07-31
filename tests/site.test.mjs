@@ -273,6 +273,16 @@ test('Child-scope motion table fits all columns on mobile', () => {
   );
 });
 
+test('Child-scope motion subtitle is not pulled into its heading', () => {
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  assert.match(
+    css,
+    /\.motion-results \.subtitle\s*\{[^}]*margin-top:\s*0\s*!important;/,
+    'motion subtitle must override Bulma\'s negative title-adjacent margin',
+  );
+});
+
 test('role evidence cards use the project page radius scale', () => {
   const css = readFileSync('static/css/index.css', 'utf8');
 
