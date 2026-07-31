@@ -171,8 +171,27 @@
           </tbody>
         </table>
       </div>
+      <div class="motion-results">
+        <h3 class="title is-5 has-text-centered">Child-scope motion quality</h3>
+        <p class="has-text-centered subtitle">Papilla trajectory error on the phantom benchmark. Lower is better; values are in pixels.</p>
+        <div class="table-container">
+          <table class="table is-fullwidth is-hoverable results-table">
+            <thead>
+              <tr><th>Model</th><th>Endpoint error (px) ↓</th><th>Centerline error (px) ↓</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>HunyuanVideo-I2V</td><td>36.068</td><td>19.126</td></tr>
+              <tr><td>Cosmos-H-Surgical</td><td>28.880</td><td>15.339</td></tr>
+              <tr><td>Wan2.2</td><td>35.093</td><td>18.544</td></tr>
+              <tr><td>Early-Fusion Wan2.2</td><td>42.590</td><td>21.733</td></tr>
+              <tr><td>Symmetric Cross-Attention MoT</td><td>31.767</td><td>12.414</td></tr>
+              <tr class="ours"><td>CrossScope</td><td>19.343</td><td>11.238</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div class="content has-text-centered metric-note">
-        <p>CrossScope also achieves <strong>0.948</strong> Mother mask IoU, <strong>0.839</strong> Child papilla box IoU, <strong>0.927</strong> detection recall, <strong>19.343 px</strong> endpoint error, and <strong>11.238 px</strong> centerline error.</p>
+        <p>CrossScope also achieves <strong>0.948</strong> Mother mask IoU, <strong>0.839</strong> Child papilla box IoU, and <strong>0.927</strong> detection recall.</p>
       </div>
     </div>
   </section>

@@ -317,6 +317,20 @@ body {
   font-weight: 700;
 }
 
+.motion-results {
+  max-width: 560px;
+  margin: 2.25rem auto 0;
+}
+
+.motion-results .title {
+  margin-bottom: 0.35rem;
+}
+
+.motion-results .subtitle {
+  margin-bottom: 0.85rem;
+  font-size: 0.92rem;
+}
+
 .metric-note {
   margin-top: 1rem;
 }
@@ -338,5 +352,19 @@ body {
     height: auto;
     max-height: none;
     object-fit: contain;
+  }
+
+  .motion-results .results-table {
+    font-size: 0.72rem;
+  }
+
+  .motion-results .results-table th {
+    min-width: 3.6rem;
+  }
+
+  .motion-results .results-table th:first-child,
+  .motion-results .results-table td:first-child {
+    min-width: 8.7rem;
+    white-space: normal;
   }
 }

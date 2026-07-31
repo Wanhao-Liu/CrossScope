@@ -240,6 +240,39 @@ test('results table fits its metric headers on desktop before falling back to sc
   assert.match(headerRule, /text-align:\s*center;/, 'results table metric headers should stay aligned');
 });
 
+test('phantom benchmark includes a Child-scope motion comparison', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  assert.match(html, /Child-scope motion quality/, 'Child-scope motion heading is missing');
+  assert.match(html, /Endpoint error \(px\).*Centerline error \(px\)/, 'motion metric headers are missing');
+  [
+    ['HunyuanVideo-I2V', '36.068', '19.126'],
+    ['Cosmos-H-Surgical', '28.880', '15.339'],
+    ['Wan2.2', '35.093', '18.544'],
+    ['Early-Fusion Wan2.2', '42.590', '21.733'],
+    ['Symmetric Cross-Attention MoT', '31.767', '12.414'],
+    ['CrossScope', '19.343', '11.238'],
+  ].forEach(([model, endpoint, centerline]) => {
+    assert.match(
+      html,
+      new RegExp(`<tr[^>]*>\\s*<td>${model}<\\/td>\\s*<td>${endpoint}<\\/td>\\s*<td>${centerline}<\\/td>\\s*<\\/tr>`),
+      `${model} Child motion results are missing`,
+    );
+  });
+});
+
+test('Child-scope motion table fits all columns on mobile', () => {
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  assert.match(css, /\.motion-results \.results-table\s*\{[^}]*font-size:\s*0\.72rem;/, 'motion table should use compact mobile type');
+  assert.match(css, /\.motion-results \.results-table th\s*\{[^}]*min-width:\s*3\.6rem;/, 'motion metric columns should shrink on mobile');
+  assert.match(
+    css,
+    /\.motion-results \.results-table th:first-child,\s*\.motion-results \.results-table td:first-child\s*\{[^}]*min-width:\s*8\.7rem;[^}]*white-space:\s*normal;/,
+    'motion model column should use a compact mobile width',
+  );
+});
+
 test('role evidence cards use the project page radius scale', () => {
   const css = readFileSync('static/css/index.css', 'utf8');
 
