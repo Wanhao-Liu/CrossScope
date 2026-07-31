@@ -59,7 +59,6 @@ test('CrossScope page retains the approved template contract', () => {
   const html = readFileSync('index.html', 'utf8');
   [
     'CrossScope: A Role-Asymmetric World Model for Joint Dual-Scope Surgical Video Prediction',
-    'Anonymous Submission',
     'static/pdfs/CrossScope.pdf',
     'Role-asymmetric dual-scope future prediction',
     'CrossScope architecture',
@@ -71,10 +70,41 @@ test('CrossScope page retains the approved template contract', () => {
   assert.doesNotMatch(html, /iSurg unifies/i);
 });
 
+test('author block identifies co-first and corresponding authors', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const coFirstAuthors = [
+    'Wanhao Liu',
+    'Jinsong Lin',
+    'Rulin Zhou',
+    'CHI KIT NG',
+  ];
+  const remainingAuthors = [
+    'Wenbin Pan',
+    'Zhiqing Tang',
+    'Dongyue Li',
+    'Miao Luo',
+    'Wu Yanshen',
+    'Panshuo Li',
+    'Zhiyong Xiong',
+    'Huxin Gao',
+    'Tamas Haidegger',
+  ];
+
+  coFirstAuthors.forEach((author) => assert.match(
+    html,
+    new RegExp(`${author}<sup>†</sup>`),
+    `${author} should be marked as a co-first author`,
+  ));
+  remainingAuthors.forEach((author) => assert.equal(html.includes(author), true, `${author} is missing`));
+  assert.match(html, /Hongliang Ren<sup>\*<\/sup>/, 'Hongliang Ren should be marked as corresponding author');
+  assert.match(html, /<sup>†<\/sup> Equal contribution\. <sup>\*<\/sup> Corresponding author\./, 'author contribution note is missing');
+  assert.doesNotMatch(html, /Anonymous Submission/, 'anonymous placeholder should be removed');
+});
+
 test('paper images and the visible Paper control resolve to local paths', () => {
   const html = readFileSync('index.html', 'utf8');
   const rendered = renderedMarkup(html);
-  ['overview.png', 'architecture.png', 'qualitative.png', 'spatial-support.png']
+  ['overview.png', 'architecture.png', 'qualitative.png', 'c2m-cases.png']
     .forEach((file) => assert.equal(
       openingTags(rendered, 'img').some((tag) => hasExactAttribute(
         tag,
@@ -92,4 +122,137 @@ test('paper images and the visible Paper control resolve to local paths', () => 
     true,
     'visible Paper control with local CrossScope PDF href is missing',
   );
+});
+
+test('role storyboard preserves full experiment figures without cropping', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  [
+    'role-example.png',
+    'role-pose.png',
+    'role-motion.png',
+    'role-c2m-support.png',
+  ].forEach((file) => {
+    assert.equal(existsSync(`static/images/${file}`), true, `${file} is missing`);
+    assert.equal(html.includes(`static/images/${file}`), true, `${file} is not referenced`);
+  });
+
+  const miniFigureRule = css.match(/\.mini-evidence-card img\s*\{[\s\S]*?\}/)?.[0] ?? '';
+  assert.match(miniFigureRule, /object-fit:\s*contain;/, 'mini evidence figures should use contain');
+  assert.doesNotMatch(miniFigureRule, /object-fit:\s*cover;/, 'mini evidence figures must not crop');
+  assert.match(
+    css,
+    /\.mini-evidence-card:last-child\s*\{[\s\S]*?grid-column:\s*1\s*\/\s*-1;/,
+    'the wide C2M support figure should use a full row',
+  );
+});
+
+test('role storyboard leaves the main experiment figure unobstructed', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  assert.doesNotMatch(html, /class="figure-badge"/, 'the main experiment figure must not contain an overlay badge');
+  assert.doesNotMatch(css, /\.figure-badge\s*\{/, 'unused overlay badge styling should be removed');
+});
+
+test('multi-case C2M and data-coverage figures are local and visible', () => {
+  const html = readFileSync('index.html', 'utf8');
+
+  [
+    'c2m-cases.png',
+    'data-coverage.png',
+  ].forEach((file) => {
+    assert.equal(existsSync(`static/images/${file}`), true, `${file} is missing`);
+    assert.equal(html.includes(`static/images/${file}`), true, `${file} is not referenced`);
+  });
+
+  assert.equal(
+    html.includes('Dual-scope observations across phantom and real-world settings'),
+    true,
+    'data coverage section heading is missing',
+  );
+});
+
+test('below-the-fold experiment figures are lazy-loaded', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const rendered = renderedMarkup(html);
+  const imageTags = openingTags(rendered, 'img');
+
+  assert.equal(
+    imageTags.some((tag) => hasExactAttribute(tag, 'src', 'static/images/overview.png')
+      && hasExactAttribute(tag, 'loading', 'lazy')),
+    false,
+    'the first overview figure should not be lazy-loaded',
+  );
+
+  [
+    'role-example.png',
+    'role-pose.png',
+    'role-motion.png',
+    'role-c2m-support.png',
+    'architecture.png',
+    'qualitative.png',
+    'c2m-cases.png',
+    'data-coverage.png',
+  ].forEach((file) => {
+    assert.equal(
+      imageTags.some((tag) => hasExactAttribute(tag, 'src', `static/images/${file}`)
+        && hasExactAttribute(tag, 'loading', 'lazy')),
+      true,
+      `${file} should be lazy-loaded`,
+    );
+  });
+});
+
+test('experiment figures reserve their native aspect ratios before loading', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const imageTags = openingTags(renderedMarkup(html), 'img');
+  const dimensions = {
+    'overview.png': [1200, 938],
+    'role-example.png': [1860, 932],
+    'role-pose.png': [1548, 750],
+    'role-motion.png': [1750, 934],
+    'role-c2m-support.png': [2466, 704],
+    'architecture.png': [2667, 1500],
+    'qualitative.png': [1860, 932],
+    'c2m-cases.png': [918, 858],
+    'data-coverage.png': [1834, 840],
+  };
+
+  Object.entries(dimensions).forEach(([file, [width, height]]) => {
+    assert.equal(
+      imageTags.some((tag) => hasExactAttribute(tag, 'src', `static/images/${file}`)
+        && hasExactAttribute(tag, 'width', String(width))
+        && hasExactAttribute(tag, 'height', String(height))),
+      true,
+      `${file} should reserve its native aspect ratio`,
+    );
+  });
+});
+
+test('results table fits its metric headers on desktop before falling back to scrolling', () => {
+  const css = readFileSync('static/css/index.css', 'utf8');
+  const headerRule = css.match(/\.results-table th\s*\{[\s\S]*?\}/)?.[0] ?? '';
+
+  assert.match(css, /\.results-table\s*\{[\s\S]*?font-size:\s*0\.79rem;/, 'results table should use compact desktop typography');
+  assert.match(headerRule, /white-space:\s*normal;/, 'results table headers should be allowed to wrap');
+  assert.match(headerRule, /text-align:\s*center;/, 'results table metric headers should stay aligned');
+});
+
+test('role evidence cards use the project page radius scale', () => {
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  [
+    ['.role-story-visual', '8px'],
+    ['.main-evidence-card', '8px'],
+    ['.mini-evidence-card', '8px'],
+  ].forEach(([selector, radius]) => {
+    const escapedSelector = selector.replace('.', '\\.') ;
+    assert.match(
+      css,
+      new RegExp(`${escapedSelector}\\s*\\{[^}]*border-radius:\\s*${radius};`),
+      `${selector} should use an ${radius} radius`,
+    );
+  });
 });

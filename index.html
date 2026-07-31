@@ -55,7 +55,23 @@
           <div class="column has-text-centered">
             <h1 class="title is-1 publication-title">CrossScope: A Role-Asymmetric World Model for Joint Dual-Scope Surgical Video Prediction</h1>
             <div class="is-size-5 publication-authors" style="margin-top: 1.5rem;">
-              <div class="author-row"><span class="author-block">Anonymous Submission</span></div>
+              <div class="author-row">
+                <span class="author-block">Wanhao Liu<sup>†</sup>,</span>
+                <span class="author-block">Jinsong Lin<sup>†</sup>,</span>
+                <span class="author-block">Rulin Zhou<sup>†</sup>,</span>
+                <span class="author-block">CHI KIT NG<sup>†</sup>,</span>
+                <span class="author-block">Wenbin Pan,</span>
+                <span class="author-block">Zhiqing Tang,</span>
+                <span class="author-block">Dongyue Li,</span>
+                <span class="author-block">Miao Luo,</span>
+                <span class="author-block">Wu Yanshen,</span>
+                <span class="author-block">Panshuo Li,</span>
+                <span class="author-block">Zhiyong Xiong,</span>
+                <span class="author-block">Huxin Gao,</span>
+                <span class="author-block">Tamas Haidegger,</span>
+                <span class="author-block">Hongliang Ren<sup>*</sup></span>
+              </div>
+              <p class="is-size-7" style="margin-top: 0.35rem;"><sup>†</sup> Equal contribution. <sup>*</sup> Corresponding author.</p>
             </div>
             <div class="publication-links" style="margin-top: 1.5rem;">
               <span class="link-block">
@@ -65,7 +81,7 @@
                 </a>
               </span>
             </div>
-            <img class="paper-figure" src="static/images/overview.png" alt="CrossScope overview: Mother and Child scopes, directional evidence routing, and prediction gains.">
+            <img class="paper-figure" src="static/images/overview.png" width="1200" height="938" alt="CrossScope overview: Mother and Child scopes, directional evidence routing, and prediction gains.">
             <p class="paper-caption">Mother and Child scopes provide complementary wide- and near-field observations. CrossScope routes geometric motion from Mother to Child and pose-aligned appearance from Child to Mother.</p>
           </div>
         </div>
@@ -88,24 +104,39 @@
     </div>
   </section>
 
-  <section class="section content-section">
+  <section class="section content-section role-story-section">
     <div class="container is-max-desktop">
-      <div class="columns is-vcentered">
-        <div class="column is-5">
+      <div class="role-story">
+        <div class="role-story-copy">
+          <p class="section-kicker">Role-asymmetric routing</p>
           <h2 class="title is-3">Why role asymmetry?</h2>
           <div class="content">
-            <p>The wide-view Mother duodenoscope provides global spatial context and visualizes the Child-scope tip. The near-field Child cholangioscope advances into narrow bile ducts to reveal local anatomy.</p>
-            <p>These flexible scopes are independently controlled rather than fixed as a calibrated stereo pair. Their relative pose, image scale, spatial overlap, and visible content vary throughout a procedure, so the views cannot be treated as interchangeable inputs.</p>
+            <p>The Mother scope supplies the stable global map, while the Child scope brings close-range detail from narrow bile ducts. Their fields of view, scale, and pose evolve independently during ERCP.</p>
+            <p>CrossScope turns this mismatch into two directed routes: M2C sends pose-derived motion evidence to the Child expert, and C2M injects Child appearance only where Mother-plane geometry supports the correspondence.</p>
+          </div>
+          <div class="route-pills" aria-label="CrossScope routing summary">
+            <span class="route-pill"><strong>2</strong> independently controlled scopes</span>
+            <span class="route-pill"><strong>M2C</strong> geometry-guided motion</span>
+            <span class="route-pill"><strong>C2M</strong> pose-aligned appearance</span>
           </div>
         </div>
-        <div class="column is-7">
-          <div class="highlight-box">
-            <strong>Routing contract.</strong> Mother-to-Child (M2C) converts a pose-derived transition description into a Child residual. Child-to-Mother (C2M) writes observed Child appearance only where a predicted Mother-plane correspondence provides geometric support.
+        <div class="role-story-visual" aria-label="Role asymmetry visual evidence storyboard">
+          <div class="main-evidence-card">
+            <img src="static/images/role-example.png" width="1860" height="932" loading="lazy" alt="CrossScope qualitative prediction comparison across Mother and Child views.">
           </div>
-          <div class="stats-grid">
-            <div class="stat-box"><div class="stat-number">2</div><div class="stat-label">independently controlled scopes</div></div>
-            <div class="stat-box"><div class="stat-number">M2C</div><div class="stat-label">geometry-guided motion route</div></div>
-            <div class="stat-box"><div class="stat-number">C2M</div><div class="stat-label">pose-aligned appearance route</div></div>
+          <div class="evidence-strip">
+            <article class="mini-evidence-card">
+              <span class="mini-evidence-title">Pose signal</span>
+              <img src="static/images/role-pose.png" width="1548" height="750" loading="lazy" alt="Pose signal used to align the dual-scope routing.">
+            </article>
+            <article class="mini-evidence-card">
+              <span class="mini-evidence-title">Motion route</span>
+              <img src="static/images/role-motion.png" width="1750" height="934" loading="lazy" alt="Motion experiment visualization for Mother-to-Child routing.">
+            </article>
+            <article class="mini-evidence-card">
+              <span class="mini-evidence-title">C2M support</span>
+              <img src="static/images/role-c2m-support.png" width="2466" height="704" loading="lazy" alt="Spatial support diagnostic for Child-to-Mother appearance routing.">
+            </article>
           </div>
         </div>
       </div>
@@ -116,7 +147,7 @@
     <div class="container is-max-desktop has-text-centered">
       <h2 class="title is-3">CrossScope architecture</h2>
       <p class="subtitle">Separate DiT experts read a shared pre-injection snapshot and receive only target-valid residual writes.</p>
-      <img class="paper-figure" src="static/images/architecture.png" alt="CrossScope dual-stream architecture with M2C geometric motion conditioning and C2M pose-aligned appearance conditioning.">
+      <img class="paper-figure" src="static/images/architecture.png" width="2667" height="1500" loading="lazy" alt="CrossScope dual-stream architecture with M2C geometric motion conditioning and C2M pose-aligned appearance conditioning.">
       <p class="paper-caption"><strong>Target-specific residual exchange.</strong> Pose Readout maps Mother states to a Mother-plane trajectory for M2C. C2M pose-aligns Current and causal History Child observations before writing or blending Mother residuals under geometric support.</p>
     </div>
   </section>
@@ -150,7 +181,7 @@
     <div class="container is-max-desktop has-text-centered">
       <h2 class="title is-3">Qualitative future prediction</h2>
       <p class="subtitle">Independent examples from a real-world Mother sequence and a phantom Child sequence.</p>
-      <img class="paper-figure" src="static/images/qualitative.png" alt="Qualitative comparison of ground truth, Cosmos-H-Surgical, and CrossScope predictions for Mother and Child views.">
+      <img class="paper-figure" src="static/images/qualitative.png" width="1860" height="932" loading="lazy" alt="Qualitative comparison of ground truth, Cosmos-H-Surgical, and CrossScope predictions for Mother and Child views.">
       <p class="paper-caption">Rows show ground truth, Cosmos-H-Surgical, and CrossScope. Yellow boxes mark comparison regions; CrossScope preserves Mother structure and Child localization across predicted frames.</p>
     </div>
   </section>
@@ -166,10 +197,21 @@
           </div>
         </div>
         <div class="column is-6">
-          <img class="paper-figure" src="static/images/spatial-support.png" alt="C2M spatial support diagnostic showing the Mother anchor, Current coverage, causal History coverage, and final injection state.">
-          <p class="paper-caption">C2M spatial-support diagnostic from the manuscript.</p>
+          <img class="paper-figure" src="static/images/c2m-cases.png" width="918" height="858" loading="lazy" alt="Four C2M spatial support cases showing the Mother anchor, Current coverage, causal History coverage, and final injection state.">
+          <p class="paper-caption">Four C2M spatial-support cases: the routing state changes with the geometrically supported Current and causal History coverage.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section content-section">
+    <div class="container is-max-desktop">
+      <div class="content has-text-centered">
+        <h2 class="title is-3">Dual-scope observations across phantom and real-world settings</h2>
+        <p>Representative Mother, mask, and Child observations make the coupled viewpoint relationship visible in both the phantom benchmark and real-world procedures.</p>
+      </div>
+      <img class="paper-figure" src="static/images/data-coverage.png" width="1834" height="840" loading="lazy" alt="Representative Mother, mask, and Child observations across phantom and real-world settings.">
+      <p class="paper-caption">Paired dual-scope observations across phantom and real-world settings.</p>
     </div>
   </section>
 
@@ -177,11 +219,10 @@
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Citation</h2>
       <div class="box">
-        <pre style="background-color: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>@misc{crossscope2026,
+<pre style="background-color: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>@misc{crossscope2026,
   title={CrossScope: A Role-Asymmetric World Model for Joint Dual-Scope Surgical Video Prediction},
-  author={Anonymous Submission},
-  year={2026},
-  note={Anonymous submission for review}
+  author={Wanhao Liu and Jinsong Lin and Rulin Zhou and CHI KIT NG and Wenbin Pan and Zhiqing Tang and Dongyue Li and Miao Luo and Wu Yanshen and Panshuo Li and Zhiyong Xiong and Huxin Gao and Tamas Haidegger and Hongliang Ren},
+  year={2026}
 }</code></pre>
       </div>
     </div>
