@@ -8,9 +8,9 @@ const requiredFiles = [
   'static/js/index.js',
   'static/images/overview.png',
   'static/images/architecture.png',
-  'static/images/qualitative.png',
   'static/images/spatial-support.png',
   'static/images/favicon.png',
+  'static/videos/final_en_subtitled_compact.mp4',
   'static/pdfs/CrossScope.pdf',
   'README.md',
 ];
@@ -104,7 +104,7 @@ test('author block identifies co-first and corresponding authors', () => {
 test('paper images and the visible Paper control resolve to local paths', () => {
   const html = readFileSync('index.html', 'utf8');
   const rendered = renderedMarkup(html);
-  ['overview.png', 'architecture.png', 'qualitative.png', 'c2m-cases.png']
+  ['overview.png', 'architecture.png', 'c2m-cases.png']
     .forEach((file) => assert.equal(
       openingTags(rendered, 'img').some((tag) => hasExactAttribute(
         tag,
@@ -121,6 +121,45 @@ test('paper images and the visible Paper control resolve to local paths', () => 
     )),
     true,
     'visible Paper control with local CrossScope PDF href is missing',
+  );
+});
+
+test('teaser places the local subtitled video below the overview figure', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const rendered = renderedMarkup(html);
+  const videoPath = 'static/videos/final_en_subtitled_compact.mp4';
+  const overviewIndex = rendered.indexOf('src="static/images/overview.png"');
+  const videoIndex = rendered.indexOf('src="' + videoPath + '"');
+  const videoTags = openingTags(rendered, 'video');
+  const sourceTags = openingTags(rendered, 'source');
+
+  assert.equal(existsSync(videoPath), true, 'teaser video file is missing');
+  assert.notEqual(overviewIndex, -1, 'overview teaser figure is missing');
+  assert.ok(videoIndex > overviewIndex, 'teaser video should be placed after the overview figure');
+  assert.equal(
+    videoTags.some((tag) => /class="[^"]*teaser-video[^"]*"/.test(tag)
+      && /\bcontrols\b/.test(tag)
+      && /\bplaysinline\b/.test(tag)),
+    true,
+    'teaser video should be an inline controllable video element',
+  );
+  assert.equal(
+    sourceTags.some((tag) => hasExactAttribute(tag, 'src', videoPath)
+      && hasExactAttribute(tag, 'type', 'video/mp4')),
+    true,
+    'teaser video should use the local mp4 source',
+  );
+});
+
+test('standalone qualitative future prediction figure is removed', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const rendered = renderedMarkup(html);
+
+  assert.doesNotMatch(rendered, /Qualitative future prediction/, 'standalone qualitative heading should be removed');
+  assert.equal(
+    openingTags(rendered, 'img').some((tag) => hasExactAttribute(tag, 'src', 'static/images/qualitative.png')),
+    false,
+    'standalone qualitative image should no longer be referenced',
   );
 });
 
@@ -192,7 +231,6 @@ test('below-the-fold experiment figures are lazy-loaded', () => {
     'role-motion.png',
     'role-c2m-support.png',
     'architecture.png',
-    'qualitative.png',
     'c2m-cases.png',
     'data-coverage.png',
   ].forEach((file) => {
@@ -215,7 +253,6 @@ test('experiment figures reserve their native aspect ratios before loading', () 
     'role-motion.png': [1750, 934],
     'role-c2m-support.png': [2466, 704],
     'architecture.png': [2667, 1500],
-    'qualitative.png': [1860, 932],
     'c2m-cases.png': [918, 858],
     'data-coverage.png': [1834, 840],
   };

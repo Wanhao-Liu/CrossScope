@@ -286,6 +286,23 @@ body {
   text-align: center;
 }
 
+.teaser-video-card {
+  width: 100%;
+  max-width: 960px;
+  margin: 1.35rem auto 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #0f172a;
+  box-shadow: 0 12px 32px rgba(31, 42, 68, 0.16);
+}
+
+.teaser-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #0f172a;
+}
+
 .results-table {
   font-size: 0.79rem;
 }
