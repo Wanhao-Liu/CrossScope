@@ -139,9 +139,12 @@ test('teaser places the local subtitled video below the overview figure', () => 
   assert.equal(
     videoTags.some((tag) => /class="[^"]*teaser-video[^"]*"/.test(tag)
       && /\bcontrols\b/.test(tag)
-      && /\bplaysinline\b/.test(tag)),
+      && /\bplaysinline\b/.test(tag)
+      && /\bautoplay\b/.test(tag)
+      && /\bloop\b/.test(tag)
+      && /\bmuted\b/.test(tag)),
     true,
-    'teaser video should be an inline controllable video element',
+    'teaser video should autoplay, loop, stay muted, and remain controllable',
   );
   assert.equal(
     sourceTags.some((tag) => hasExactAttribute(tag, 'src', videoPath)
@@ -161,6 +164,39 @@ test('standalone qualitative future prediction figure is removed', () => {
     false,
     'standalone qualitative image should no longer be referenced',
   );
+});
+
+test('research styling uses a scoped dual-scope visual system', () => {
+  const html = readFileSync('index.html', 'utf8');
+  const css = readFileSync('static/css/index.css', 'utf8');
+
+  [
+    'research-hero',
+    'teaser-stack',
+    'dual-route-line',
+    'section-head',
+    'figure-panel',
+    'results-card',
+    'citation-box',
+  ].forEach((className) => assert.match(
+    html,
+    new RegExp('class="[^"]*' + className + '[^"]*"'),
+    className + ' should appear in the refined research layout',
+  ));
+
+  [
+    ['--scope-ink', '#172033'],
+    ['--scope-paper', '#f8fafc'],
+    ['--scope-teal', '#1e8a8a'],
+    ['--scope-amber', '#d99a2b'],
+  ].forEach(([token, value]) => assert.match(
+    css,
+    new RegExp(token + ':\\s*' + value, 'i'),
+    token + ' should be defined for the CrossScope visual system',
+  ));
+
+  assert.doesNotMatch(html, /style="background-color:\s*#fafafa;?"/, 'section backgrounds should be handled in CSS');
+  assert.doesNotMatch(html, /<pre\s+style=/, 'citation code block should use a reusable CSS class');
 });
 
 test('role storyboard preserves full experiment figures without cropping', () => {

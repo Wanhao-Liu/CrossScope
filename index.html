@@ -18,43 +18,21 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="static/css/index.css">
 
-  <style>
-    .publication-title { font-family: 'Google Sans', sans-serif; }
-    .hero { background: white; }
-    .author-row { display: block; }
-    .button { margin: 0.25rem; }
-    .highlight-box {
-      background-color: #f5f5f5;
-      border-left: 4px solid #667eea;
-      border-radius: 8px;
-      margin: 1rem 0;
-      padding: 1.5rem;
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-    .stat-box {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .stat-number { color: #667eea; font-size: 1.75rem; font-weight: bold; }
-    .stat-label { color: #4a4a4a; font-size: 0.9rem; margin-top: 0.5rem; }
-  </style>
 </head>
-<body>
-  <section class="hero">
+<body class="research-page">
+  <section class="hero research-hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
+            <p class="publication-kicker">Dual-scope surgical world modeling</p>
             <h1 class="title is-1 publication-title">CrossScope: A Role-Asymmetric World Model for Joint Dual-Scope Surgical Video Prediction</h1>
-            <div class="is-size-5 publication-authors" style="margin-top: 1.5rem;">
+            <div class="dual-route-line" aria-hidden="true">
+              <span>Mother view</span>
+              <i></i>
+              <span>Child view</span>
+            </div>
+            <div class="is-size-5 publication-authors">
               <div class="author-row">
                 <span class="author-block">Wanhao Liu<sup>†</sup>,</span>
                 <span class="author-block">Jinsong Lin<sup>†</sup>,</span>
@@ -73,7 +51,7 @@
               </div>
               <p class="is-size-7" style="margin-top: 0.35rem;"><sup>†</sup> Equal contribution. <sup>*</sup> Corresponding author.</p>
             </div>
-            <div class="publication-links" style="margin-top: 1.5rem;">
+            <div class="publication-links">
               <span class="link-block">
                 <a href="static/pdfs/CrossScope.pdf" class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="fas fa-file-pdf"></i></span>
@@ -81,13 +59,17 @@
                 </a>
               </span>
             </div>
-            <img class="paper-figure" src="static/images/overview.png" width="1200" height="938" alt="CrossScope overview: Mother and Child scopes, directional evidence routing, and prediction gains.">
-            <p class="paper-caption">Mother and Child scopes provide complementary wide- and near-field observations. CrossScope routes geometric motion from Mother to Child and pose-aligned appearance from Child to Mother.</p>
-            <div class="teaser-video-card">
-              <video class="teaser-video" controls playsinline preload="metadata" aria-label="CrossScope subtitled project video teaser.">
-                <source src="static/videos/final_en_subtitled_compact.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
+            <div class="teaser-stack">
+              <figure class="figure-panel teaser-panel">
+                <img class="paper-figure" src="static/images/overview.png" width="1200" height="938" alt="CrossScope overview: Mother and Child scopes, directional evidence routing, and prediction gains.">
+                <figcaption class="paper-caption">Mother and Child scopes provide complementary wide- and near-field observations. CrossScope routes geometric motion from Mother to Child and pose-aligned appearance from Child to Mother.</figcaption>
+              </figure>
+              <div class="teaser-video-card">
+                <video class="teaser-video" controls autoplay loop muted playsinline preload="metadata" aria-label="CrossScope subtitled project video teaser.">
+                  <source src="static/videos/final_en_subtitled_compact.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
             </div>
           </div>
         </div>
@@ -95,11 +77,14 @@
     </div>
   </section>
 
-  <section class="section hero is-light content-section">
+  <section class="section hero is-light content-section abstract-section">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
+          <div class="section-head">
+            <p class="section-kicker">Problem setting</p>
+            <h2 class="title is-3">Abstract</h2>
+          </div>
           <div class="content has-text-justified">
             <p>Visual world models typically learn future dynamics from a single observation stream, limiting their ability to model cooperative systems with multiple independently moving observers. We investigate this challenge in Mother-Child endoscopic retrograde cholangiopancreatography (ERCP), where two flexible scopes provide complementary yet role-dependent views without a calibrated stereo relationship.</p>
             <p>We formulate <strong>Role-asymmetric dual-scope future prediction</strong>, where cross-view evidence is selectively transferred according to the prediction target and its spatial requirements. CrossScope is a dual-stream surgical world model that preserves view-specific experts while enabling target-specific evidence routing through geometry-guided residual interactions.</p>
@@ -149,20 +134,28 @@
     </div>
   </section>
 
-  <section class="section content-section" style="background-color: #fafafa;">
+  <section class="section content-section panel-section">
     <div class="container is-max-desktop has-text-centered">
-      <h2 class="title is-3">CrossScope architecture</h2>
-      <p class="subtitle">Separate DiT experts read a shared pre-injection snapshot and receive only target-valid residual writes.</p>
-      <img class="paper-figure" src="static/images/architecture.png" width="2667" height="1500" loading="lazy" alt="CrossScope dual-stream architecture with M2C geometric motion conditioning and C2M pose-aligned appearance conditioning.">
-      <p class="paper-caption"><strong>Target-specific residual exchange.</strong> Pose Readout maps Mother states to a Mother-plane trajectory for M2C. C2M pose-aligns Current and causal History Child observations before writing or blending Mother residuals under geometric support.</p>
+      <div class="section-head section-head-centered">
+        <p class="section-kicker">Model design</p>
+        <h2 class="title is-3">CrossScope architecture</h2>
+        <p class="subtitle">Separate DiT experts read a shared pre-injection snapshot and receive only target-valid residual writes.</p>
+      </div>
+      <figure class="figure-panel">
+        <img class="paper-figure" src="static/images/architecture.png" width="2667" height="1500" loading="lazy" alt="CrossScope dual-stream architecture with M2C geometric motion conditioning and C2M pose-aligned appearance conditioning.">
+        <figcaption class="paper-caption"><strong>Target-specific residual exchange.</strong> Pose Readout maps Mother states to a Mother-plane trajectory for M2C. C2M pose-aligns Current and causal History Child observations before writing or blending Mother residuals under geometric support.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section class="section content-section">
+  <section class="section content-section results-section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">End-to-end results on the phantom benchmark</h2>
-      <p class="has-text-centered subtitle">Frame fidelity across Child and Mother views. Higher PSNR/SSIM and lower FID/LPIPS are better.</p>
-      <div class="table-container">
+      <div class="section-head section-head-centered">
+        <p class="section-kicker">Quantitative evidence</p>
+        <h2 class="title is-3 has-text-centered">End-to-end results on the phantom benchmark</h2>
+        <p class="has-text-centered subtitle">Frame fidelity across Child and Mother views. Higher PSNR/SSIM and lower FID/LPIPS are better.</p>
+      </div>
+      <div class="table-container results-card">
         <table class="table is-fullwidth is-hoverable results-table">
           <thead>
             <tr><th>Model</th><th>Child PSNR</th><th>Child SSIM</th><th>Child FID</th><th>Child LPIPS</th><th>Mother PSNR</th><th>Mother SSIM</th><th>Mother FID</th><th>Mother LPIPS</th></tr>
@@ -180,7 +173,7 @@
       <div class="motion-results">
         <h3 class="title is-5 has-text-centered">Child-scope motion quality</h3>
         <p class="has-text-centered subtitle">Papilla trajectory error on the phantom benchmark. Lower is better; values are in pixels.</p>
-        <div class="table-container">
+        <div class="table-container results-card">
           <table class="table is-fullwidth is-hoverable results-table">
             <thead>
               <tr><th>Model</th><th>Endpoint error (px) ↓</th><th>Centerline error (px) ↓</th></tr>
@@ -202,19 +195,24 @@
     </div>
   </section>
 
-  <section class="section content-section">
+  <section class="section content-section split-section">
     <div class="container is-max-desktop">
       <div class="columns is-vcentered">
         <div class="column is-6">
-          <h2 class="title is-3">Geometry-licensed C2M support</h2>
+          <div class="section-head">
+            <p class="section-kicker">Routing validity</p>
+            <h2 class="title is-3">Geometry-licensed C2M support</h2>
+          </div>
           <div class="content">
             <p>C2M has a different information contract from M2C: it writes only pose-aligned appearance from observed Child frames to the Mother expert. Current is the observed Child anchor; History contains strictly earlier cached observations.</p>
             <p>Support is established before a residual is written. The predicted trajectory can select a Current-only, History-only, dual-source, or Null state without admitting future Child-token states as appearance evidence.</p>
           </div>
         </div>
         <div class="column is-6">
-          <img class="paper-figure" src="static/images/c2m-cases.png" width="918" height="858" loading="lazy" alt="Four C2M spatial support cases showing the Mother anchor, Current coverage, causal History coverage, and final injection state.">
-          <p class="paper-caption">Four C2M spatial-support cases: the routing state changes with the geometrically supported Current and causal History coverage.</p>
+          <figure class="figure-panel compact-panel">
+            <img class="paper-figure" src="static/images/c2m-cases.png" width="918" height="858" loading="lazy" alt="Four C2M spatial support cases showing the Mother anchor, Current coverage, causal History coverage, and final injection state.">
+            <figcaption class="paper-caption">Four C2M spatial-support cases: the routing state changes with the geometrically supported Current and causal History coverage.</figcaption>
+          </figure>
         </div>
       </div>
     </div>
@@ -222,20 +220,26 @@
 
   <section class="section content-section">
     <div class="container is-max-desktop">
-      <div class="content has-text-centered">
+      <div class="content has-text-centered section-head section-head-centered">
+        <p class="section-kicker">Data coverage</p>
         <h2 class="title is-3">Dual-scope observations across phantom and real-world settings</h2>
         <p>Representative Mother, mask, and Child observations make the coupled viewpoint relationship visible in both the phantom benchmark and real-world procedures.</p>
       </div>
-      <img class="paper-figure" src="static/images/data-coverage.png" width="1834" height="840" loading="lazy" alt="Representative Mother, mask, and Child observations across phantom and real-world settings.">
-      <p class="paper-caption">Paired dual-scope observations across phantom and real-world settings.</p>
+      <figure class="figure-panel">
+        <img class="paper-figure" src="static/images/data-coverage.png" width="1834" height="840" loading="lazy" alt="Representative Mother, mask, and Child observations across phantom and real-world settings.">
+        <figcaption class="paper-caption">Paired dual-scope observations across phantom and real-world settings.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section class="section content-section" style="background-color: #fafafa;">
+  <section class="section content-section panel-section citation-section">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Citation</h2>
-      <div class="box">
-<pre style="background-color: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>@misc{crossscope2026,
+      <div class="section-head section-head-centered">
+        <p class="section-kicker">Reference</p>
+        <h2 class="title is-3 has-text-centered">Citation</h2>
+      </div>
+      <div class="box citation-box">
+<pre class="citation-pre"><code>@misc{crossscope2026,
   title={CrossScope: A Role-Asymmetric World Model for Joint Dual-Scope Surgical Video Prediction},
   author={Wanhao Liu and Jinsong Lin and Rulin Zhou and CHI KIT NG and Wenbin Pan and Zhiqing Tang and Dongyue Li and Miao Luo and Wu Yanshen and Panshuo Li and Zhiyong Xiong and Huxin Gao and Tamas Haidegger and Hongliang Ren},
   year={2026}
